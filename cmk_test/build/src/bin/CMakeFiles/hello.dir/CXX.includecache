@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/util/util.h
+
+/home/chenjian/workspace/test/cmk_test/src/hello/main.cpp
+string.h
+-
+iostream
+-
+util/util.h
+-
+

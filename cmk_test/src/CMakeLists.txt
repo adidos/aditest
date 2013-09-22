@@ -1,0 +1,2 @@
+ADD_SUBDIRECTORY(hello bin)
+ADD_SUBDIRECTORY(util)

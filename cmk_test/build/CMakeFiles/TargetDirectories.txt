@@ -1,0 +1,2 @@
+/home/chenjian/workspace/test/cmk_test/build/src/bin/CMakeFiles/hello.dir
+/home/chenjian/workspace/test/cmk_test/build/src/util/CMakeFiles/util.dir
