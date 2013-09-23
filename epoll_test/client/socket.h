@@ -3,7 +3,10 @@
 
 #include <string>
 
-#include "net_inc.h"
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 using namespace std;
 
@@ -19,11 +22,13 @@ public:
 	string getIP();
 	int getPort();
 	string getIPAddr();
-	sockaddr_in& getNetAddr(){return addr;};
+	sockaddr_in& getNetAddr(){return addr_;};
 	
 private:
 	sockaddr_in addr_;
 };
+
+#define INVALID_SOCKET -1
 
 class Socket
 {
@@ -33,18 +38,18 @@ public:
 	
 	inline int getfd(){return fd_;};
 	
-	int bind(const InetAddr& addr);
+	int bind(InetAddr& addr);
 	int listen(int backlog = 5);
-	int accept();
-	int connect(const InetAddr& addr);
+	int accept(Socket& s, InetAddr& addr);
+	int connect(InetAddr& addr);
 	int close(){return ::close(fd_);};
 	
-	int recv();
-	int send(); 
+	int recv(void* pBuf, size_t len, int iflag);
+	int send(const void* pBuf, size_t len, int iflag); 
 	int recvfrom(){return 0;};
 	int sendto(){return 0;};
 	
-	setNoBlock();
+	int setBlock(bool bBlock);
 	
 private:
 	int domain_;

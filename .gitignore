@@ -1,0 +1,13 @@
+#忽略*.o和*.a
+*.[oa]
+
+#忽略swp件
+*.swp
+
+#忽略cscope相关文件
+cscope*
+
+#忽略build目录
+build
+
+current.tags
