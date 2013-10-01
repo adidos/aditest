@@ -11,3 +11,7 @@ cscope*
 build
 
 current.tags
+
+bin
+
+pkg
