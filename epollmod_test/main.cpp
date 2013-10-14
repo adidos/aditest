@@ -20,12 +20,13 @@ int main()
 	if(epfd < 0)
 		perror("epoll_create");
 
+	cout << "run here" <<endl;
 	epoll_event ev;
 	ev.events = EPOLLIN | EPOLLET;
-	ev.data.u64 = 1 << 32 | fd;
+	ev.data.u64 = (uint64_t)1 << 32 | fd;
 	epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev);
 	
-	auto func1 = [=](){
+	function<void () > func1 = [&](){
 		while(1)
 		{
 			int num = epoll_wait(epfd, event, 2, 5000);
@@ -37,20 +38,22 @@ int main()
 			
 		}
 	};
-
+	cout << "run here 1" <<endl;
 	thread waitth(func1);
 
-	auto func2 = [=](){
+	cout << "run here 2" <<endl;
+	function<void () > func2 = [=](){
 		while(1)
 		{
 			epoll_event ev;
 			ev.events = EPOLLOUT | EPOLLET;
-			ev.data.u64 = 1 << 32 | fd;
+			ev.data.u64 = (uint64_t)1 << 32 | fd;
 			epoll_ctl(epfd, EPOLL_CTL_MOD, fd, &ev);
 			this_thread::sleep_for(std::chrono::seconds(5));
 		}
-	}
+	};
 	thread modth(func2);
+	cout << "run here 3" <<endl;
 
 	return 0;
 }
