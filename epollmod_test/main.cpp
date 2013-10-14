@@ -1,6 +1,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/epoll.h>
+#include <pthread.h>
 
 #include <iostream>
 #include <thread>
@@ -8,7 +9,22 @@
 using namespace std;
 
 int fd = -1;
+int epfd = -1;
 epoll_event event[2];
+
+void* func1(void*)
+{
+    while(1)
+    {
+	    int num = epoll_wait(epfd, event, 2, 5000);
+		for(int i = 0; i < num; ++i)
+		{
+			if(event[i].data.fd == fd)
+				cout << "event come in" << endl;
+		}
+		
+	}
+};
 
 int main()
 {
@@ -26,20 +42,8 @@ int main()
 	ev.data.u64 = (uint64_t)1 << 32 | fd;
 	epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev);
 	
-	function<void () > func1 = [&](){
-		while(1)
-		{
-			int num = epoll_wait(epfd, event, 2, 5000);
-			for(int i = 0; i < num; ++i)
-			{
-				if(event[i].data.fd == fd)
-					cout << "event come in" << endl;
-			}
-			
-		}
-	};
-	cout << "run here 1" <<endl;
-	thread waitth(func1);
+    pthread_t tid;
+    pthread_create(&tid, NULL, func1, NULL);
 
 	cout << "run here 2" <<endl;
 	function<void () > func2 = [=](){
@@ -54,6 +58,9 @@ int main()
 	};
 	thread modth(func2);
 	cout << "run here 3" <<endl;
+
+    pthread_join(tid, NULL);
+    modth.join();
 
 	return 0;
 }
